@@ -1,0 +1,17 @@
+# Environments
+.env
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Data & Large Files (Don't upload massive videos/audio to GitHub)
+data/
+Data set/
+*.mp4
+*.wav
+*.zip
+
+# OS Files
+.DS_Store
+Thumbs.db
