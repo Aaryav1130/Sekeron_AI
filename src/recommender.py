@@ -1,0 +1,126 @@
+import json
+import google.generativeai as genai
+from typing import List
+
+from src.schemas import RecommendationResult, UpdatedRecommendationResult, ArtistIntelligence
+
+class Recommender:
+    def __init__(self, api_key: str):
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel("gemini-3.6-flash")
+        
+    def generate_recommendation(
+        self, brief_id: str, brief_text: str, artist_records: List[ArtistIntelligence]
+    ) -> RecommendationResult:
+        
+        # Serialize the artist intelligence for context
+        artists_json = [json.loads(a.model_dump_json()) for a in artist_records]
+        
+        prompt = f"""
+        You are a recommendation engine for a creative marketplace.
+        
+        Hirer Brief:
+        {brief_text}
+        
+        Available Artists Intelligence (Evidence-Backed):
+        {json.dumps(artists_json, indent=2)}
+        
+        Task:
+        1. Interpret the hirer's intent from the incomplete brief.
+        2. Identify explicit constraints and important unknowns.
+        3. Recommend the TOP 2 artists from the provided list based ONLY on their demonstrated evidence (not just claims).
+        4. Explain the match reasoning, trade-offs, and assumptions made.
+        5. Formulate up to 2 high-impact refinement questions for the hirer that would materially change this ranking.
+        
+        Return the result strictly conforming to the requested JSON schema. Provide ALL required fields.
+        """
+        
+        # Adding a retry loop because LLMs occasionally miss nested fields in strict JSON schema
+        import time
+        for attempt in range(5):
+            try:
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=genai.GenerationConfig(
+                        response_mime_type="application/json",
+                        response_schema=RecommendationResult,
+                        temperature=0.1  # Low temp for deterministic JSON
+                    )
+                )
+                
+                result = RecommendationResult.model_validate_json(response.text)
+                result.brief_id = brief_id
+                return result
+            except Exception as e:
+                error_msg = str(e)
+                if "429" in error_msg or "Quota exceeded" in error_msg:
+                    print(f"\n[Rate Limit Hit] Waiting 60s before retrying {brief_id}...")
+                    time.sleep(60)
+                    continue
+                elif attempt >= 3:
+                    print(f"\n[Warning] Recommendation for {brief_id} failed: {e}")
+                    # Return safe fallback object so pipeline doesn't crash
+                    return RecommendationResult(
+                        brief_id=brief_id,
+                        interpreted_intent="Error: Could not generate structured recommendation.",
+                        explicit_constraints=[],
+                        important_unknowns=[],
+                        initial_top_two=[],
+                        refinement_questions=[]
+                    )
+
+    def rerank_recommendation(
+        self, brief_id: str, original_recommendation: RecommendationResult, 
+        update_text: str, artist_records: List[ArtistIntelligence]
+    ) -> UpdatedRecommendationResult:
+        
+        artists_json = [json.loads(a.model_dump_json()) for a in artist_records]
+        
+        prompt = f"""
+        You are a recommendation engine for a creative marketplace.
+        
+        Original Recommendation Context:
+        {original_recommendation.model_dump_json(indent=2)}
+        
+        New Hirer Update:
+        {update_text}
+        
+        Available Artists Intelligence:
+        {json.dumps(artists_json, indent=2)}
+        
+        Task:
+        Re-rank the candidates based on the new information. 
+        Select the updated top 2 artists.
+        Explain exactly what changed in your ranking logic and why this new evidence shifted the result.
+        
+        Return the result strictly conforming to the requested JSON schema. Provide ALL required fields.
+        """
+        
+        for attempt in range(5):
+            try:
+                response = self.model.generate_content(
+                    prompt,
+                    generation_config=genai.GenerationConfig(
+                        response_mime_type="application/json",
+                        response_schema=UpdatedRecommendationResult,
+                        temperature=0.1
+                    )
+                )
+                
+                result = UpdatedRecommendationResult.model_validate_json(response.text)
+                result.brief_id = brief_id
+                return result
+            except Exception as e:
+                error_msg = str(e)
+                if "429" in error_msg or "Quota exceeded" in error_msg:
+                    print(f"\n[Rate Limit Hit] Waiting 60s before retrying re-rank for {brief_id}...")
+                    time.sleep(60)
+                    continue
+                elif attempt >= 3:
+                    print(f"\n[Warning] Re-ranking for {brief_id} failed: {e}")
+                    return UpdatedRecommendationResult(
+                        brief_id=brief_id,
+                        new_information="Error parsing update",
+                        what_changed_and_why="Pipeline encountered a JSON validation error.",
+                        updated_top_two=[]
+                    )
