@@ -1,0 +1,143 @@
+[
+  {
+    "brief_id": "01_cafe_music_whatsapp.txt",
+    "interpreted_intent": "The hirer is looking for a budget-friendly solo or duo acoustic musician to play low-volume, conversational background music (Hindi/English mix) for a 3-hour cafe slot with minimal equipment footprint.",
+    "explicit_constraints": [
+      "Budget target around 7k INR, absolute maximum 9k INR",
+      "Performance time from 7:00 PM to 10:00 PM next Friday (3-hour duration)",
+      "Music style must be acoustic background music (Hindi and/or English), keeping volume low enough for conversations",
+      "Minimal stage setup footprint with no large band equipment"
+    ],
+    "important_unknowns": [
+      "Whether the cafe sound system has adequate inputs/amplification for live acoustic music or if the artist must bring a portable PA",
+      "Exact artist pricing, availability, and equipment ownership due to data pipeline parsing errors across musician profiles"
+    ],
+    "initial_top_two": [
+      {
+        "artist_id": "M01_Meera_Arjun",
+        "rank": 1,
+        "match_reasoning": "Selected as a top candidate in the musician category for a small acoustic cafe gig based on category match.",
+        "trade_offs": "No verified portfolio audio samples or demonstrated equipment setup available due to data ingestion errors.",
+        "assumptions_made": "Assumed to be a solo or duo acoustic act able to perform bilingual Hindi/English background sets within the 7k-9k budget and provide minimal PA equipment if required.",
+        "uncertainty": "High uncertainty regarding verified repertoire, exact pricing, and sound equipment setup."
+      },
+      {
+        "artist_id": "M03_Raghav_Sen",
+        "rank": 2,
+        "match_reasoning": "Selected as a secondary musician candidate suitable for acoustic performance requirements.",
+        "trade_offs": "Lack of verified media evidence or fee confirmation due to data parsing errors.",
+        "assumptions_made": "Assumed to be an acoustic solo performer suitable for low-volume cafe background music fitting within the budget limit.",
+        "uncertainty": "High uncertainty regarding live performance style and equipment self-sufficiency."
+      }
+    ],
+    "refinement_questions": [
+      {
+        "question": "Can your cafe sound system accept direct instrument and vocal mic inputs, or does the musician need to bring their own portable amplifier/PA system?",
+        "expected_impact": "Clarifies whether the artist needs to bring a portable PA system, which affects artist selection and budget feasibility."
+      },
+      {
+        "question": "Would you prefer a solo acoustic singer-guitarist to maximize budget efficiency and minimize physical footprint?",
+        "expected_impact": "Helps confirm if a solo acoustic performer is preferred to keep costs strictly around the 7k target."
+      }
+    ]
+  },
+  {
+    "brief_id": "02_skincare_photography_chat.txt",
+    "interpreted_intent": "The hirer needs an agile product photographer based in Gurgaon or Delhi for a quick-turnaround skincare launch. The project requires shooting 4 products with simple tabletop styling to create 12 clean, premium web and social media images (square/vertical) within an 18,000 INR budget, needing image selects within 2 days.",
+    "explicit_constraints": [
+      "Product photography for 4 skincare items (bottles/jars, optional hand shot)",
+      "Clean, premium aesthetics avoiding sterile/hospital white visual style",
+      "12 final edited images formatted in square and vertical crops for website and Instagram",
+      "Turnaround time: Selects required within 2 days",
+      "Budget capped at approximately 18,000 INR including basic retouching",
+      "Location preference: Gurgaon (preferred) or Delhi"
+    ],
+    "important_unknowns": [
+      "Final confirmation on hand model inclusion and sourcing responsibilities",
+      "Exact prop arrangement and mobile studio/lighting equipment provided by photographer",
+      "Exact usage rights scope beyond initial website and social media channels",
+      "Specific shoot date availability within the upcoming week"
+    ],
+    "initial_top_two": [
+      {
+        "artist_id": "P01_Aanya_Rao",
+        "rank": 1,
+        "match_reasoning": "Categorized as a photographer suitable for commercial product assignments. Selected as top candidate subject to portfolio verification once media links are restored.",
+        "trade_offs": "Lack of verified portfolio evidence in the system record requires client to inspect external portfolio samples before booking.",
+        "assumptions_made": "Assumed P01_Aanya_Rao is a local photography professional capable of product styling and tabletop lighting setups within the Gurgaon/Delhi region despite database parsing issues.",
+        "uncertainty": "High uncertainty due to processing failure in portfolio data and missing capability verification."
+      },
+      {
+        "artist_id": "P02_Kabir_Mehta",
+        "rank": 2,
+        "match_reasoning": "Listed in the photographer directory and available for photography services matching tabletop product setups.",
+        "trade_offs": "No verified portfolio media or client reviews available in current system entry, presenting risk on aesthetic alignment.",
+        "assumptions_made": "Assumed Kabir Mehta operates locally in Delhi/NCR and has basic tabletop lighting equipment to execute product shots independently.",
+        "uncertainty": "Very high uncertainty as profile claims and media samples are absent from dataset."
+      }
+    ],
+    "refinement_questions": [
+      {
+        "question": "Will the photographer need to bring props, textured surfaces, and backdrops, or will all styling elements be provided on site?",
+        "expected_impact": "Clarifies whether the photographer must supply tactile props/surfaces or if simple tabletop props are fully supplied by the hirer."
+      },
+      {
+        "question": "Is the hand model confirmed for the shoot, and is their fee included within the 18k total budget?",
+        "expected_impact": "Determines if candidate budget must cover model coordination and fees or if the shoot remains strictly product-only."
+      }
+    ]
+  },
+  {
+    "brief_id": "03_vertical_video_email.txt",
+    "interpreted_intent": "Error: Could not generate structured recommendation.",
+    "explicit_constraints": [],
+    "important_unknowns": [],
+    "initial_top_two": [],
+    "refinement_questions": []
+  },
+  {
+    "brief_id": "04_leadership_event_photos.txt",
+    "interpreted_intent": "The client is looking for a corporate event photographer who excels at capturing natural, engaging candid moments across a 5-hour leadership off-site for ~120 people, capable of managing a large group photo (~120 pax), potential quick leadership headshots, and delivering a fast same-day batch of 8\u201310 polished LinkedIn-ready photos.",
+    "explicit_constraints": [
+      "Date and time: 4 September, 10:00 AM to 3:00 PM",
+      "Location: South Delhi venue (exact location TBD)",
+      "Style: Candid, natural coverage of sessions, exercises, interactions, and lunch (avoiding stiff corporate style)",
+      "Group Photo: One formal full-team photograph for 110\u2013130 people before departure",
+      "Turnaround: 8\u201310 edited pictures delivered the same evening for LinkedIn posting"
+    ],
+    "important_unknowns": [
+      "Exact venue layout, ambient lighting, and rules on flash usage",
+      "Budget parameters and procurement caps",
+      "Final requirement/timeline decision on leadership headshots (10\u201315 people)",
+      "Complete portfolio and verified performance evidence for available photographers due to system data parsing gaps"
+    ],
+    "initial_top_two": [
+      {
+        "artist_id": "P02_Kabir_Mehta",
+        "rank": 1,
+        "match_reasoning": "Categorized as a photographer on the platform, suitable for consideration for corporate event coverage pending profile verification.",
+        "trade_offs": "Selected without demonstrated portfolio evidence in system records, requiring manual portfolio verification prior to confirmation.",
+        "assumptions_made": "Assumed the photographer has corporate event experience and basic lighting equipment for large group shots and same-day editing capabilities.",
+        "uncertainty": "High uncertainty due to lack of verified portfolio media and past client feedback in the database."
+      },
+      {
+        "artist_id": "PO5_Frames",
+        "rank": 2,
+        "match_reasoning": "Categorized as a photographer available for event hiring.",
+        "trade_offs": "Lack of verified visual evidence regarding lighting control, group composition, and post-processing speed.",
+        "assumptions_made": "Assumed capability to handle candid event coverage, large group photography, and same-day digital delivery.",
+        "uncertainty": "High uncertainty due to missing profile text and media samples."
+      }
+    ],
+    "refinement_questions": [
+      {
+        "question": "Will there be a dedicated quiet nook and a set 30-45 minute time window for the 10\u201315 leadership headshots, or should the photographer prioritize pure event coverage?",
+        "expected_impact": "Determines whether a secondary lighting setup and dedicated assistant/time slot are required for leadership headshots alongside candid coverage."
+      },
+      {
+        "question": "What is the target budget range or procurement cap for this 5-hour engagement?",
+        "expected_impact": "Allows filtering and presenting option tiers that fit procurement guidelines while confirming photographer availability for same-evening image turnarounds."
+      }
+    ]
+  }
+]
