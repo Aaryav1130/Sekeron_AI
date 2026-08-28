@@ -1,13 +1,15 @@
 import json
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 from typing import List
 
 from src.schemas import RecommendationResult, UpdatedRecommendationResult, ArtistIntelligence
 
 class Recommender:
     def __init__(self, api_key: str):
-        genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel("gemini-3.6-flash")
+        # Using the new official google.genai SDK
+        self.client = genai.Client(api_key=api_key)
+        self.model_name = "gemini-3.6-flash"
         
     def generate_recommendation(
         self, brief_id: str, brief_text: str, artist_records: List[ArtistIntelligence]
@@ -39,9 +41,10 @@ class Recommender:
         import time
         for attempt in range(5):
             try:
-                response = self.model.generate_content(
-                    prompt,
-                    generation_config=genai.GenerationConfig(
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
                         response_mime_type="application/json",
                         response_schema=RecommendationResult,
                         temperature=0.1  # Low temp for deterministic JSON
@@ -96,11 +99,13 @@ class Recommender:
         Return the result strictly conforming to the requested JSON schema. Provide ALL required fields.
         """
         
+        import time
         for attempt in range(5):
             try:
-                response = self.model.generate_content(
-                    prompt,
-                    generation_config=genai.GenerationConfig(
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
                         response_mime_type="application/json",
                         response_schema=UpdatedRecommendationResult,
                         temperature=0.1

@@ -1,5 +1,6 @@
 import os
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 import json
 from pathlib import Path
 from typing import Literal
@@ -9,9 +10,9 @@ from src.media_extractor import MediaSelector
 
 class AIEngine:
     def __init__(self, api_key: str):
-        genai.configure(api_key=api_key)
-        # Using gemini-3.6-flash as it is fast, multimodal, and supports structured JSON outputs
-        self.model = genai.GenerativeModel("gemini-3.6-flash")
+        # Using the new official google.genai SDK
+        self.client = genai.Client(api_key=api_key)
+        self.model_name = "gemini-3.6-flash"
         
     def _read_profile_text(self, folder_path: Path) -> str:
         """Finds and reads the profile text file."""
@@ -41,7 +42,7 @@ class AIEngine:
         uploaded_files = []
         for mf in media_files:
             try:
-                uploaded = genai.upload_file(path=mf)
+                uploaded = self.client.files.upload(file=str(mf))
                 uploaded_files.append(uploaded)
             except Exception as e:
                 print(f"\nWarning: Could not upload {mf} - {e}")
@@ -72,9 +73,10 @@ class AIEngine:
         import time
         for attempt in range(4):
             try:
-                response = self.model.generate_content(
-                    contents,
-                    generation_config=genai.GenerationConfig(
+                response = self.client.models.generate_content(
+                    model=self.model_name,
+                    contents=contents,
+                    config=types.GenerateContentConfig(
                         response_mime_type="application/json",
                         response_schema=ArtistIntelligence
                     )
@@ -85,7 +87,7 @@ class AIEngine:
                 # Clean up uploaded files from Google servers
                 for uf in uploaded_files:
                     try:
-                        genai.delete_file(uf.name)
+                        self.client.files.delete(name=uf.name)
                     except:
                         pass
                         
@@ -104,7 +106,7 @@ class AIEngine:
         # Fallback for damaged/unparsable cases if all retries fail
         for uf in uploaded_files:
             try:
-                genai.delete_file(uf.name)
+                self.client.files.delete(name=uf.name)
             except:
                 pass
                 
