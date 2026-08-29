@@ -60,17 +60,19 @@ class Recommender:
                     print(f"\n[Rate Limit Hit] Waiting 60s before retrying {brief_id}...")
                     time.sleep(60)
                     continue
-                elif attempt >= 3:
+                elif attempt >= 4:
                     print(f"\n[Warning] Recommendation for {brief_id} failed: {e}")
-                    # Return safe fallback object so pipeline doesn't crash
-                    return RecommendationResult(
-                        brief_id=brief_id,
-                        interpreted_intent="Error: Could not generate structured recommendation.",
-                        explicit_constraints=[],
-                        important_unknowns=[],
-                        initial_top_two=[],
-                        refinement_questions=[]
-                    )
+                    break
+                    
+        # Return safe fallback object if all attempts exhaust (e.g. constant 429s)
+        return RecommendationResult(
+            brief_id=brief_id,
+            interpreted_intent="Error: Could not generate structured recommendation due to strict quota limits.",
+            explicit_constraints=[],
+            important_unknowns=[],
+            initial_top_two=[],
+            refinement_questions=[]
+        )
 
     def rerank_recommendation(
         self, brief_id: str, original_recommendation: RecommendationResult, 
@@ -121,11 +123,13 @@ class Recommender:
                     print(f"\n[Rate Limit Hit] Waiting 60s before retrying re-rank for {brief_id}...")
                     time.sleep(60)
                     continue
-                elif attempt >= 3:
+                elif attempt >= 4:
                     print(f"\n[Warning] Re-ranking for {brief_id} failed: {e}")
-                    return UpdatedRecommendationResult(
-                        brief_id=brief_id,
-                        new_information="Error parsing update",
-                        what_changed_and_why="Pipeline encountered a JSON validation error.",
-                        updated_top_two=[]
-                    )
+                    break
+                    
+        return UpdatedRecommendationResult(
+            brief_id=brief_id,
+            new_information="Error parsing update",
+            what_changed_and_why="Pipeline encountered an API error or hit persistent quota limits.",
+            updated_top_two=[]
+        )

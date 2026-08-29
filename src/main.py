@@ -3,8 +3,12 @@ import sys
 import json
 import argparse
 import time
+import warnings
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Suppress google.genai internal warnings about Automatic Function Calling
+warnings.filterwarnings("ignore", module="google.genai")
 
 # Rich for TUI
 from rich.console import Console
